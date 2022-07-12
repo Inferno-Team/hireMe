@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CompanyApplications;
 use App\Models\CompanyPositions;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OperationController extends Controller
@@ -36,13 +39,82 @@ class OperationController extends Controller
             ->where('experience', '>=',  $experience)
             ->where('job_level', 'like',  $job_level)
             ->where('remote', $remote)
-            ->with('company')
+            ->with('company', 'applications.user')
             ->get();
+        $user = Auth::user();
+        $pos = $pos->filter(function ($p) use ($user) {
+            $apps = $p->applications;
+            foreach ($apps as $app) {
+                if ($app->user->id == $user->id) {
+                    $app->isMine = true;
+                }
+            }
+            return true;
+        });
         return response()->json($pos, 200);
     }
     public function getAllPositions()
     {
-        $pos = CompanyPositions::with('company')->get();
+        $pos = CompanyPositions::with('company', 'applications.user')->get();
+        $user = Auth::user();
+        $pos = $pos->filter(function ($p) use ($user) {
+            $apps = $p->applications;
+            foreach ($apps as $app) {
+                if ($app->user->id == $user->id) {
+                    $app->isMine = true;
+                }
+            }
+            return true;
+        });
+        return response()->json($pos, 200);
+    }
+    public function applyJob(Request $request)
+    {
+        $user = Auth::user();
+        $pos = CompanyPositions::where('id', $request->id)->with('company')->first();
+        $application = CompanyApplications::create([
+            'user_id' => $user->id,
+            'position_id' => $request->id,
+            'cv_file' => ''
+        ]);
+        if ($request->hasFile('cv')) {
+            $cv = $request->file('cv');
+            $ex = $cv->getClientOriginalExtension();
+            $time = time();
+            $name = $time . '.' . $ex;
+
+            $compName = $pos->company->name;
+
+            $cv->storeAs("public/cv/$compName", $name);
+            $application->cv_file = "/storage/cv/$compName/" . $name;
+            $application->save();
+        }
+        info($application);
+        return response()->json([
+            'code' => 200,
+            'msg' => 'applyed successfully'
+        ], 200);
+    }
+    public function myAccount()
+    {
+        return response()->json(Auth::user(), 200);
+    }
+    public function updateAccount(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->fill($request->all())->save();
+        return response()->json($user, 200);
+    }
+    public function loadMyJobs(Request $request)
+    {
+        $user = Auth::user();
+        $user = User::where('id', $user->id)->with('applications.position.company')->first();
+
+        $pos = [];
+        foreach ($user->applications as $app) {
+            info($app);
+            array_push($pos, $app->position);
+        }
         return response()->json($pos, 200);
     }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="first-container">
     <v-container>
-      <nar-bar :selected="'2'"></nar-bar>
+      <nar-bar :selected="'3'"></nar-bar>
     </v-container>
     <div class="main-container">
       <div class="jobs-and-page">

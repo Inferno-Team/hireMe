@@ -88,6 +88,7 @@
             v-for="(job, index) in jobsToDisplay"
             :key="index"
             :job="job"
+            @onJobClicked="onJobClicked"
           ></Job>
         </div>
         <v-pagination
@@ -102,8 +103,6 @@
 <script>
 import NarBar from "../components/NarBar.vue";
 import Job from "../components/Job.vue";
-import axios from "axios";
-// import Job from "../components/Job.vue";
 export default {
   components: { NarBar, Job },
   mounted() {
@@ -176,13 +175,12 @@ export default {
         .then((response) => {
           this.jobs = response.data;
           this.pageChanged(1);
-          let pages = this.jobs.length / this.itemPerPage;
-          if (pages % 1 > 0) pages = Math.round(pages);
-          this.pageCount = pages;
+          this.pageCount = Math.ceil(this.jobs.length / this.itemPerPage);
         })
         .catch((err) => console.log(err));
     },
     pageChanged(page) {
+      this.jobsToDisplay = [];
       let firstIndex = (page - 1) * this.itemPerPage;
       let lastIndex = firstIndex + this.itemPerPage;
       if (lastIndex > this.jobs.length) lastIndex = this.jobs.length;
@@ -197,6 +195,12 @@ export default {
       this.sendData = {};
       this.isClear = true;
       this.value = [0, 10];
+    },
+    onJobClicked(id) {
+      const type = localStorage.getItem("hire-me-user-type");
+      if (type !== "user") return;
+      this.selectedJobId = id;
+      this.applyDialogState = true;
     },
   },
 };

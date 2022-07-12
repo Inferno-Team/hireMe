@@ -12,6 +12,7 @@ class CompanyController extends Controller
 {
     public function addCompany(Request $request)
     {
+
         // [ name , description , file(logo) ]
         $user = Auth::user();
         $company = Company::where('user_id', $user->id)->first();
@@ -32,7 +33,7 @@ class CompanyController extends Controller
             $logo->storeAs('public/logo', $name);
             $company->logo_url = "/storage/logo/$name";
             $company->save();
-        }
+        } else info('no logo');
         return response()->json([
             'msg' => 'added Successfully',
             'code' => 200
@@ -50,7 +51,7 @@ class CompanyController extends Controller
             ], 200);
         $position = CompanyPositions::create([
             'company_id' => $user->company->id,
-            'postion_name' => $request->name,
+            'postion_name' => $request->postion_name,
             'location' => $request->location,
             'job_role' => $request->job_role,
             'job_level' => $request->job_level,
@@ -58,12 +59,40 @@ class CompanyController extends Controller
             'salary' => $request->salary,
             'remote' => $request->remote
         ]);
+        $position->company = $user->company;
+        $position->applications = [];
         return response()->json([
             'code' => 200,
             'msg' => 'added Successfully',
             'position' => $position
         ], 200);
     }
+    public function editPosition(Request $request)
+    {
+        // [ 'location','job_role','postion_name','job_level',
+        // 'experience','salary','remote']
+        $user = Auth::user();
+        $position = CompanyPositions::find($request->id);
+        $position->fill($request->all())->save();
+        $position->company = $user->company;
+        $position->applications = [];
+        return response()->json([
+            'code' => 200,
+            'msg' => 'edited Successfully',
+            'position' => $position
+        ], 200);
+    }
+     public function delPosition(Request $request)
+    {
+      //[id]
+        $position = CompanyPositions::find($request->id);
+        $position->delete();
+        return response()->json([
+            'code' => 200,
+            'msg' => 'deleted Successfully',
+        ], 200);
+    }
+    
     public function positionApplications(int $id)
     {
         // check if this user has company
@@ -105,7 +134,39 @@ class CompanyController extends Controller
     }
     public function getCompanyPositions(int $id)
     {
-        $positions = CompanyPositions::where('company_id', $id)->with('company')->get();
+        $positions = CompanyPositions::where('company_id', $id)->with('company', 'applications.user')->get();
+        $user = Auth::user();
+        $positions = $positions->filter(function ($p) use ($user) {
+            $apps = $p->applications;
+            foreach ($apps as $app) {
+                if ($app->user->id == $user->id) {
+                    $app->isMine = true;
+                }
+            }
+            return true;
+        });
         return response()->json($positions, 200);
+    }
+    public function getMyCompanyPositions()
+    {
+        $user = Auth::user();
+        $company = Company::where('user_id', $user->id)->first();
+        if (isset($company)) {
+            $positions = CompanyPositions::where('company_id', $company->id)
+                ->orderBy('created_at', 'DESC')
+                ->with('company', 'applications.user')->get();
+            $positions = $positions->filter(function ($p) use ($user) {
+                $apps = $p->applications;
+                foreach ($apps as $app) {
+                    if ($app->user->id == $user->id) {
+                        $app->isMine = true;
+                    }
+                }
+                return true;
+            });
+            return response()->json(['pos' => $positions, 'msg' => '', 'code' => 200], 200);
+        } else {
+            return response()->json(['pos' => [], 'msg' => '', 'code' => 300], 200);
+        }
     }
 }

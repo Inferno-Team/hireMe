@@ -25,7 +25,7 @@ class CompanyPositions extends Model
     }
     public function applications()
     {
-        return $this->hasMany(CompanyApplications::class);
+        return $this->hasMany(CompanyApplications::class,'position_id');
     }
     protected $casts = [
         'remote' => 'boolean'

@@ -2,7 +2,6 @@
   <v-row style="z-index: 3">
     <img
       src="/images/logo.png"
-      class="mr-3"
       height="80"
       style="z-index: 3; margin-right: 2rem !important"
     />
@@ -49,6 +48,7 @@
         :color="'white'"
         :title="'My Company'"
         :id="'company'"
+        @pressed="moveToMyCompany"
         v-if="userType == 'manager'"
         style="z-index: 3"
       ></home-button>
@@ -56,6 +56,7 @@
         :color="'white'"
         :title="'My Account'"
         :id="'company'"
+        @pressed="moveToMyAccount"
         v-if="userType == 'user'"
         style="z-index: 3"
       ></home-button>
@@ -135,6 +136,12 @@ export default {
         this.$router.push({ name: "join_now" });
       }
     },
+    moveToMyCompany() {
+      this.$router.push({ name: "my-comapny" });
+    },
+    moveToMyAccount(){
+       this.$router.push({ name: "my-account" });
+    }
   },
 };
 </script>

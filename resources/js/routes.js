@@ -5,6 +5,8 @@ import JoinNow from './layout/JoinNow.vue';
 import CompaniesLayout from './layout/CompaniesLayout.vue';
 import JobSearch from './layout/JobSearch.vue';
 import CompanyJobsLayout from './layout/CompanyJobsLayout.vue';
+import MyCompanyLayout from './layout/MyCompanyLayout.vue';
+import MyAccountLayout from './layout/MyAccountLayout.vue';
 export const routes = [{
         path: '/',
         name: 'home',
@@ -38,6 +40,14 @@ export const routes = [{
         name: 'company_jobs',
         component: CompanyJobsLayout,
         props: true
+    }, {
+        path: '/my-comapny',
+        name: 'my-comapny',
+        component: MyCompanyLayout
+    }, {
+        path: '/my-account',
+        name: 'my-account',
+        component: MyAccountLayout
     }
 
 ];

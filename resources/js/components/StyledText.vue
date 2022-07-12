@@ -1,8 +1,9 @@
 <template>
-    <div @click="click" style="cursor: pointer; transition: 0.5s; margin: 1rem;" :class="['font-weight-medium ',
+    <div @click="click" style="cursor: pointer; transition: 0.5s; margin: 1rem;" 
+    :class="['font-weight-medium ',
     enabled ? 'underline' : '',
     enabled ? 'purple--text' : 'black--text']">
-        {{ text }}
+        {{text}}
     </div>
 </template>
 <script>
