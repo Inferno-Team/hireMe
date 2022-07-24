@@ -82,9 +82,9 @@ class CompanyController extends Controller
             'position' => $position
         ], 200);
     }
-     public function delPosition(Request $request)
+    public function delPosition(Request $request)
     {
-      //[id]
+        //[id]
         $position = CompanyPositions::find($request->id);
         $position->delete();
         return response()->json([
@@ -92,7 +92,7 @@ class CompanyController extends Controller
             'msg' => 'deleted Successfully',
         ], 200);
     }
-    
+
     public function positionApplications(int $id)
     {
         // check if this user has company
@@ -108,18 +108,20 @@ class CompanyController extends Controller
             return response()->json([
                 'code' => 404,
                 'msg' => 'position not found',
+                'applications' => []
             ], 200);
         if ($pos->company_id != $user->company->id)
             return response()->json([
                 'code' => 404,
-                'msg' => "this position dosn't belongs to your company"
+                'msg' => "this position dosn't belongs to your company",
+                'applications' => []
             ], 200);
         $applications = CompanyApplications::where('position_id', $pos->id)
-            ->with('user')->get();
+            ->with('user')->orderBy('created_at', 'asc')->get()->map->format();
         return response()->json([
             'code' => 200,
             'msg' => 'positions',
-            'applications' => []
+            'applications' => $applications
         ], 200);
     }
     public function applicationUser(int $id)

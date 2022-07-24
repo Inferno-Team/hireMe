@@ -7,6 +7,7 @@ import JobSearch from './layout/JobSearch.vue';
 import CompanyJobsLayout from './layout/CompanyJobsLayout.vue';
 import MyCompanyLayout from './layout/MyCompanyLayout.vue';
 import MyAccountLayout from './layout/MyAccountLayout.vue';
+import PositionApplicationsLayout from './layout/PositionApplicationsLayout.vue';
 export const routes = [{
         path: '/',
         name: 'home',
@@ -48,6 +49,12 @@ export const routes = [{
         path: '/my-account',
         name: 'my-account',
         component: MyAccountLayout
+    },
+    {
+        path: '/my-comapny/positions/:id',
+        name: 'applications',
+        component: PositionApplicationsLayout,
+        props: true
     }
 
 ];

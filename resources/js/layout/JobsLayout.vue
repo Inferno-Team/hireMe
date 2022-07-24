@@ -12,7 +12,7 @@
             text--darken-2
             font-weight-bold
             text-lg-h6
-            ma-auto
+            mx-auto
           "
         >
           Filter
@@ -88,7 +88,6 @@
             v-for="(job, index) in jobsToDisplay"
             :key="index"
             :job="job"
-            @onJobClicked="onJobClicked"
           ></Job>
         </div>
         <v-pagination
@@ -136,13 +135,14 @@ export default {
       applying: false,
       jobs: [],
       isClear: true,
-      itemPerPage: 5,
+      itemPerPage: 6,
       jobsToDisplay: [],
       pageCount: 1,
     };
   },
   methods: {
     salaryRangeChange(val) {
+      console.log(val);
       let firstIndex = val[0] / 10;
       let secondIndex = val[1] / 10;
       let firstSalary = this.salaries[firstIndex];
@@ -153,21 +153,20 @@ export default {
       this.change(val);
     },
     applyFilter() {
+       this.applying = true;
       axios
         .post("/api/filter", this.sendData)
         .then((response) => {
           this.jobs = response.data;
           this.applying = false;
           this.pageChanged(1);
-          let pages = this.jobs.length / this.itemPerPage;
-          if (pages % 1 > 0) pages = Math.round(pages);
-          this.pageCount = pages;
+          this.pageCount = Math.ceil(this.jobs.length / this.itemPerPage);
         })
         .catch((err) => {
           console.log(err);
           this.applying = false;
         });
-      this.applying = true;
+     
     },
     loadJobs() {
       axios
@@ -194,13 +193,8 @@ export default {
     clear() {
       this.sendData = {};
       this.isClear = true;
-      this.value = [0, 10];
-    },
-    onJobClicked(id) {
-      const type = localStorage.getItem("hire-me-user-type");
-      if (type !== "user") return;
-      this.selectedJobId = id;
-      this.applyDialogState = true;
+      this.value = [0, 0];
+      this.saleryHint = ``;
     },
   },
 };

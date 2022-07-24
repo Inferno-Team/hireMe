@@ -35,9 +35,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/update-account', [OperationController::class, 'updateAccount']);
         Route::post('/apply-to-job', [OperationController::class, 'applyJob']);
         Route::post('/load-my-jobs', [OperationController::class, 'loadMyJobs']);
+   });
+    Route::group(['middleware'=>['logged_in']],function(){
         Route::get('get_positions', [OperationController::class, 'getAllPositions']);
         Route::post('filter', [OperationController::class, 'filter']);
         Route::get('/get_all_companies', [CompanyController::class, 'getAllCompanies']);
         Route::get('/get_company_positions/{id}', [CompanyController::class, 'getCompanyPositions']);
+  
     });
 });

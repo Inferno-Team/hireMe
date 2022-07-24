@@ -3,7 +3,7 @@
 </template>
 <script>
 export default {
-  props: ["dim", "color", "rotate", "pos","name"],
+  props: ["dim", "color", "rotate", "pos"],
   computed: {
     computedStyle() {
       return {

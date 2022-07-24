@@ -39,7 +39,7 @@
       :color="shape.color"
       :dim="shape.dim"
       :pos="shape.pos"
-      :name="name"
+      
       :rotate="shape.deg"
     />
   </div>
@@ -87,7 +87,6 @@ export default {
   data() {
     return {
       shapes: [],
-      name:'Ali'
     };
   },
 };

@@ -15,4 +15,11 @@ class CompanyApplications extends Model
     public function position(){
         return $this->belongsTo(CompanyPositions::class,'position_id');
     }
+    public function format(){
+        return [
+            "cv_file"=>$this->cv_file,
+            "user"=>$this->user,
+            "created_at"=>$this->created_at->diffForHumans()
+        ];
+    }
 }

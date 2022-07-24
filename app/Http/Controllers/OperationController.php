@@ -57,7 +57,7 @@ class OperationController extends Controller
     {
         $pos = CompanyPositions::with('company', 'applications.user')->get();
         $user = Auth::user();
-        $pos = $pos->filter(function ($p) use ($user) {
+        $pos = $pos->filter(function ($p)  use($user){
             $apps = $p->applications;
             foreach ($apps as $app) {
                 if ($app->user->id == $user->id) {

@@ -1,273 +1,304 @@
 <template>
-  <v-card
-    :style="mine"
-    v-longclick="onLongClick"
-    @click.prevent="oninnerJobClicked"
-    :class="[
-      'ma-2',
-      'pa-2',
-      'deep-purple',
-      isMineObject ? 'no-pointer' : 'pointer',
-      isMineObject ? 'lighten-3' : 'lighten-5',
-    ]"
-    v-ripple="!isMineObject"
-    elevation="2"
+  <v-speed-dial
+    v-model="fab"
+    :top="true"
+    :left="true"
+    :direction="'right'"
+    :open-on-hover="hover"
+    :transition="'scale-transition'"
   >
-    <v-card-title style="word-break: break-word">
-      {{ innerJob.postion_name }}
-    </v-card-title>
-    <v-divider></v-divider>
-    <v-row>
-      <div class="purple--text div-50">Location:</div>
-      <div
+    <template v-slot:activator>
+      <v-card
+        :style="mine"
+        v-longclick="onLongClick"
+        @click.prevent="oninnerJobClicked"
         :class="[
-          isMineObject ? 'text--lighten-5' : '',
-          'orange--text',
-          'div-50',
+          'ma-2',
+          'pa-2',
+          'deep-purple',
+          isMineObject ? 'no-pointer' : 'pointer',
+          isMineObject ? 'lighten-3' : 'lighten-5',
         ]"
+        v-ripple="!isMineObject"
+        elevation="2"
       >
-        {{ innerJob.location }}
-      </div>
-    </v-row>
-    <v-row>
-      <div class="purple--text div-50">Job Role:</div>
-      <div
-        :class="[
-          isMineObject ? 'text--lighten-5' : '',
-          'orange--text',
-          'div-50',
-        ]"
-      >
-        {{ innerJob.job_role }}
-      </div> </v-row
-    ><v-row>
-      <div class="purple--text div-50">Job Level:</div>
-      <div
-        :class="[
-          isMineObject ? 'text--lighten-5' : '',
-          'orange--text',
-          'div-50',
-        ]"
-      >
-        {{ innerJob.job_level }}
-      </div> </v-row
-    ><v-row>
-      <div class="purple--text div-50">Experience:</div>
-      <div
-        :class="[
-          isMineObject ? 'text--lighten-5' : '',
-          'orange--text',
-          'div-50',
-        ]"
-      >
-        {{ innerJob.experience }} Years
-      </div> </v-row
-    ><v-row>
-      <div class="purple--text div-50">Salary:</div>
-      <div
-        :class="[
-          isMineObject ? 'text--lighten-5' : '',
-          'orange--text',
-          'div-50',
-        ]"
-      >
-        {{ innerJob.salary }} S.P
-      </div> </v-row
-    ><v-row>
-      <div class="purple--text div-50">Remotly:</div>
-      <div
-        :class="[
-          isMineObject ? 'text--lighten-5' : '',
-          'orange--text',
-          'div-50',
-        ]"
-      >
-        {{ innerJob.remote ? "Yes" : "No" }}
-      </div>
-    </v-row>
-    <v-divider></v-divider
-    ><v-row>
-      <div class="purple--text div-50">Comapny Name:</div>
-      <div
-        :class="[
-          isMineObject ? 'text--lighten-5' : '',
-          'orange--text',
-          'div-50',
-        ]"
-      >
-        {{ innerJob.company.name }}
-      </div>
-    </v-row>
-    <v-dialog v-model="applyDialogState" max-width="290">
-      <v-card>
-        <v-card-title class="text-h5"> Applying to this Job ? </v-card-title>
-        <div class="text-center" v-if="isloadingApply">
-          <v-progress-circular
-            indeterminate
-            color="success"
-            class="m-auto"
-          ></v-progress-circular>
-        </div>
-
-        <v-file-input
-          accept="application/pdf"
-          label="CV File Only PDF allowed"
-          chips
-          v-if="!isloadingApply"
-          outlined
-          @change="getFileObject($event)"
-          show-size
-          clearable
-          v-model="filename"
-          style="width: 275px"
-          truncate-length="10"
-        ></v-file-input>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn color="green darken-1" text @click="applyDialogState = false">
-            Cancel
-          </v-btn>
-
-          <v-btn color="green darken-1" text @click="applyForJob">
-            Apply
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog v-model="deleteDialogState" max-width="290">
-      <v-card>
-        <v-card-title class="text-h5">
-          Are you sure you want to delete this job ?
+        <v-card-title style="word-break: break-word">
+          {{ innerJob.postion_name }}
         </v-card-title>
-        <div class="text-center" v-if="isloadingApply">
-          <v-progress-circular
-            indeterminate
-            color="success"
-            class="m-auto"
-          ></v-progress-circular>
-        </div>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-
-          <v-btn color="green darken-1" text @click="deleteDialogState = false">
-            No
-          </v-btn>
-
-          <v-btn color="green darken-1" text @click="deleteThisJob">
-            Yes
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog
-      fullscreen
-      v-model="editDialogState"
-      hide-overlay
-      transition="dialog-bottom-transition"
-      scrollable
-    >
-      <v-card tile>
-        <v-toolbar
-          style="flex: 0 !important"
-          :extended="false"
-          flat
-          dark
-          color="purple"
-        >
-          <v-btn icon dark @click="editDialogState = false"
-            ><v-icon>mdi-close</v-icon></v-btn
+        <v-divider></v-divider>
+        <v-row>
+          <div class="purple--text div-50">Location:</div>
+          <div
+            :class="[
+              isMineObject ? 'text--lighten-5' : '',
+              'orange--text',
+              'div-50',
+            ]"
           >
-          <v-spacer></v-spacer>
-          <v-toolbar-title>Edit Position</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-btn dark text @click="editPosition"> Save </v-btn>
-          </v-toolbar-items>
-        </v-toolbar>
+            {{ innerJob.location }}
+          </div>
+        </v-row>
+        <v-row>
+          <div class="purple--text div-50">Job Role:</div>
+          <div
+            :class="[
+              isMineObject ? 'text--lighten-5' : '',
+              'orange--text',
+              'div-50',
+            ]"
+          >
+            {{ innerJob.job_role }}
+          </div> </v-row
+        ><v-row>
+          <div class="purple--text div-50">Job Level:</div>
+          <div
+            :class="[
+              isMineObject ? 'text--lighten-5' : '',
+              'orange--text',
+              'div-50',
+            ]"
+          >
+            {{ innerJob.job_level }}
+          </div> </v-row
+        ><v-row>
+          <div class="purple--text div-50">Experience:</div>
+          <div
+            :class="[
+              isMineObject ? 'text--lighten-5' : '',
+              'orange--text',
+              'div-50',
+            ]"
+          >
+            {{ innerJob.experience }} Years
+          </div> </v-row
+        ><v-row>
+          <div class="purple--text div-50">Salary:</div>
+          <div
+            :class="[
+              isMineObject ? 'text--lighten-5' : '',
+              'orange--text',
+              'div-50',
+            ]"
+          >
+            {{ innerJob.salary }} S.P
+          </div> </v-row
+        ><v-row>
+          <div class="purple--text div-50">Remotly:</div>
+          <div
+            :class="[
+              isMineObject ? 'text--lighten-5' : '',
+              'orange--text',
+              'div-50',
+            ]"
+          >
+            {{ innerJob.remote ? "Yes" : "No" }}
+          </div>
+        </v-row>
+        <v-divider></v-divider
+        ><v-row>
+          <div class="purple--text div-50">Comapny Name:</div>
+          <div
+            :class="[
+              isMineObject ? 'text--lighten-5' : '',
+              'orange--text',
+              'div-50',
+            ]"
+          >
+            {{ innerJob.company.name }}
+          </div>
+        </v-row>
+        <v-dialog v-model="applyDialogState" max-width="290">
+          <v-card>
+            <v-card-title class="text-h5">
+              Applying to this Job ?
+            </v-card-title>
+            <div class="text-center" v-if="isloadingApply">
+              <v-progress-circular
+                indeterminate
+                color="success"
+                class="m-auto"
+              ></v-progress-circular>
+            </div>
 
-        <div class="input-fields my-auto">
-          <v-row>
-            <v-col>
-              <v-text-field
-                class="input-field"
-                label="Position Name"
-                required
-                v-model="innerJob.postion_name"
-                :rules="[(value) => !!value || 'Required.']"
-                :type="'text'"
-                outlined
-                color="purple darken-3"
-              ></v-text-field>
+            <v-file-input
+              accept="application/pdf"
+              label="CV File Only PDF allowed"
+              chips
+              v-if="!isloadingApply"
+              outlined
+              @change="getFileObject($event)"
+              show-size
+              clearable
+              v-model="filename"
+              style="width: 275px"
+              truncate-length="10"
+            ></v-file-input>
+            <v-card-actions>
+              <v-spacer></v-spacer>
 
-              <v-text-field
-                class="input-field"
-                label="Location"
-                required
-                v-model="innerJob.location"
-                :rules="[(value) => !!value || 'Required.']"
-                :type="'text'"
-                outlined
-                color="purple darken-3"
-              ></v-text-field>
+              <v-btn
+                color="green darken-1"
+                text
+                @click="applyDialogState = false"
+              >
+                Cancel
+              </v-btn>
 
-              <v-text-field
-                class="input-field"
-                label="Experience"
-                required
-                v-model="innerJob.experience"
-                :rules="[(value) => !!value || 'Required.']"
-                :type="'number'"
-                outlined
-                color="purple darken-3"
-              ></v-text-field>
+              <v-btn color="green darken-1" text @click="applyForJob">
+                Apply
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
 
-              <v-checkbox
-                v-model="innerJob.remote"
-                :label="'Remotly ?'"
-                color="purple"
-              ></v-checkbox>
-            </v-col>
-            <v-col>
-              <v-text-field
-                class="input-field"
-                label="Job Role"
-                required
-                v-model="innerJob.job_role"
-                :rules="[(value) => !!value || 'Required.']"
-                :type="'text'"
-                outlined
-                color="purple darken-3"
-              ></v-text-field>
-              <v-select
-                :items="levels"
-                label="Job Level"
-                outlined
-                v-model="innerJob.job_level"
-              ></v-select>
+        <v-dialog v-model="deleteDialogState" max-width="290">
+          <v-card>
+            <v-card-title class="text-h5">
+              Are you sure you want to delete this job ?
+            </v-card-title>
+            <div class="text-center" v-if="isloadingApply">
+              <v-progress-circular
+                indeterminate
+                color="success"
+                class="m-auto"
+              ></v-progress-circular>
+            </div>
 
-              <v-text-field
-                class="input-field"
-                label="Salary"
-                required
-                v-model="innerJob.salary"
-                :rules="[(value) => !!value || 'Required.']"
-                :type="'number'"
-                outlined
-                color="purple darken-3"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-        </div>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn
+                color="green darken-1"
+                text
+                @click="deleteDialogState = false"
+              >
+                No
+              </v-btn>
+
+              <v-btn color="green darken-1" text @click="deleteThisJob">
+                Yes
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog
+          fullscreen
+          v-model="editDialogState"
+          hide-overlay
+          transition="dialog-bottom-transition"
+          scrollable
+        >
+          <v-card tile>
+            <v-toolbar
+              style="flex: 0 !important"
+              :extended="false"
+              flat
+              dark
+              color="purple"
+            >
+              <v-btn icon dark @click="editDialogState = false"
+                ><v-icon>mdi-close</v-icon></v-btn
+              >
+              <v-spacer></v-spacer>
+              <v-toolbar-title>Edit Position</v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-toolbar-items>
+                <v-btn dark text @click="editPosition"> Save </v-btn>
+              </v-toolbar-items>
+            </v-toolbar>
+
+            <div class="input-fields my-auto">
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    class="input-field"
+                    label="Position Name"
+                    required
+                    v-model="innerJob.postion_name"
+                    :rules="[(value) => !!value || 'Required.']"
+                    :type="'text'"
+                    outlined
+                    color="purple darken-3"
+                  ></v-text-field>
+
+                  <v-text-field
+                    class="input-field"
+                    label="Location"
+                    required
+                    v-model="innerJob.location"
+                    :rules="[(value) => !!value || 'Required.']"
+                    :type="'text'"
+                    outlined
+                    color="purple darken-3"
+                  ></v-text-field>
+
+                  <v-text-field
+                    class="input-field"
+                    label="Experience"
+                    required
+                    v-model="innerJob.experience"
+                    :rules="[(value) => !!value || 'Required.']"
+                    :type="'number'"
+                    outlined
+                    color="purple darken-3"
+                  ></v-text-field>
+
+                  <v-checkbox
+                    v-model="innerJob.remote"
+                    :label="'Remotly ?'"
+                    color="purple"
+                  ></v-checkbox>
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    class="input-field"
+                    label="Job Role"
+                    required
+                    v-model="innerJob.job_role"
+                    :rules="[(value) => !!value || 'Required.']"
+                    :type="'text'"
+                    outlined
+                    color="purple darken-3"
+                  ></v-text-field>
+                  <v-select
+                    :items="levels"
+                    label="Job Level"
+                    outlined
+                    v-model="innerJob.job_level"
+                  ></v-select>
+
+                  <v-text-field
+                    class="input-field"
+                    label="Salary"
+                    required
+                    v-model="innerJob.salary"
+                    :rules="[(value) => !!value || 'Required.']"
+                    :type="'number'"
+                    outlined
+                    color="purple darken-3"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </div>
+          </v-card>
+        </v-dialog>
+        <v-snackbar v-model="snackbar" :timeout="1500">
+          You are already applyed for this Job
+        </v-snackbar>
       </v-card>
-    </v-dialog>
-    <v-snackbar v-model="snackbar" :timeout="1500">
-      You are already applyed for this Job
-    </v-snackbar>
-  </v-card>
+    </template>
+    <v-btn
+      @click="() => (editDialogState = true)"
+      fab
+      dark
+      small
+      color="purple lighten-1"
+      :class="[hover ? '' : 'displayNone']"
+    >
+      <v-icon>mdi-pencil</v-icon>
+    </v-btn>
+  </v-speed-dial>
 </template>
 <script>
 export default {
@@ -275,7 +306,9 @@ export default {
   data() {
     return {
       isMineObject: false,
+      fab: false,
       filename: null,
+      hover: false,
       applyDialogState: false,
       cvFile: File,
       isloadingApply: false,
@@ -296,7 +329,13 @@ export default {
     oninnerJobClicked() {
       if (this.deleteDialogState) return;
       if (this.editable) {
-        this.editDialogState = true;
+        // move to cv's page
+        this.$router.push({
+          name: "applications",
+          params: {
+            id: this.job.id,
+          },
+        });
       } else {
         if (!this.isMineObject) {
           this.applyDialogState = true;
@@ -368,6 +407,7 @@ export default {
   computed: {
     mine() {
       this.isMineObject = false;
+      this.hover = this.editable;
       this.innerJob = this.job;
       var apps = this.job.applications;
       if (apps == null || apps == undefined) {
@@ -399,5 +439,8 @@ export default {
 }
 .no-pointer {
   cursor: unset;
+}
+.displayNone {
+  display: none !important;
 }
 </style>

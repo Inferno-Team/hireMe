@@ -40,7 +40,6 @@
                     dark
                     rounded
                     class="orange darken-3"
-                    depressed
                     style="margin: 0.2rem"
                     large
                     @click="login"
@@ -96,7 +95,9 @@ export default {
               "Authorization"
             ] = `Bearer ${res.token}`;
             this.$router.push({ name: "home" });
-          } else this.errors = res.errors;
+          } else {
+            alert(res.message);
+          }
           this.isLoading = false;
         })
         .catch((err) => {

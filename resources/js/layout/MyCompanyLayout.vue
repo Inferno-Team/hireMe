@@ -3,6 +3,8 @@
     <v-container>
       <nar-bar :selected="'-'"></nar-bar>
     </v-container>
+
+ 
     <div :class="[loading ? 'default-container' : 'main-container']">
       <div v-if="loading" class="text-center" style="line-height: 33">
         <v-progress-circular
@@ -17,7 +19,7 @@
             v-for="(job, index) in jobsToDisplay"
             :key="index"
             :job="job"
-            :editable="'true'"
+            :editable="true"
             @del="onDeleted"
           ></Job>
         </div>
@@ -240,6 +242,7 @@ export default {
   },
   data() {
     return {
+      fab: false,
       jobs: [],
       itemPerPage: 5,
       jobsToDisplay: [],
@@ -373,4 +376,11 @@ export default {
   padding-top: 0.25rem;
   width: 22rem;
 }
+ #create .v-speed-dial {
+    position: absolute;
+  }
+
+  #create .v-btn--floating {
+    position: relative;
+  }
 </style>
