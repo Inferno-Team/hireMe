@@ -16,7 +16,7 @@
           <div class="deep-purple--text mt-5">
             {{ app.user.phone_number }}
           </div>
-          <div class="deep-purple--text text--lighten-4  mt-5 text-sm-body-2">
+          <div class="deep-purple--text text--lighten-2 mt-5 text-sm-body-2">
             {{ app.created_at }}
           </div>
         </v-row>
@@ -28,14 +28,6 @@
 export default {
   props: ["app"],
   methods: {
-    onApplicationClick() {
-      this.$router.push({
-        name: "company_jobs",
-        params: {
-          id: this.app.id,
-        },
-      });
-    },
     downloadItem() {
       axios
         .get(this.app.cv_file, { responseType: "blob" })
@@ -47,7 +39,7 @@ export default {
           link.click();
           URL.revokeObjectURL(link.href);
         })
-        .catch(console.error);
+        .catch((err) => console.log(err));
     },
   },
 };

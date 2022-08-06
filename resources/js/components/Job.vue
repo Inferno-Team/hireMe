@@ -1,8 +1,6 @@
 <template>
   <v-speed-dial
     v-model="fab"
-    :top="true"
-    :left="true"
     :direction="'right'"
     :open-on-hover="hover"
     :transition="'scale-transition'"
@@ -411,7 +409,6 @@ export default {
       this.innerJob = this.job;
       var apps = this.job.applications;
       if (apps == null || apps == undefined) {
-        this.isMineObject = true;
         return;
       }
       for (var i = 0; i < apps.length; i++) {

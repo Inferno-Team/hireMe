@@ -24,6 +24,7 @@ class OperationController extends Controller
     {
         // [ salary_low , location , job_role , postion_name , job_level ,
         // experience , salary_big , remote ]
+        info($request);
         $salary_low = isset($request->salary_low) ? $request->salary_low : 0;
         $salary_high = isset($request->salary_high) ? $request->salary_high : PHP_INT_MAX;
 
@@ -31,17 +32,28 @@ class OperationController extends Controller
         $postion_name = isset($request->postion_name) ? "%$request->postion_name%" : '%';
         $experience = isset($request->experience) ? $request->experience : '0';
         $job_level = isset($request->job_level) ? $request->job_level : '%';
-        $remote = isset($request->remotly) ? $request->remotly : 'false';
+        $pos = [];
 
-        $pos = CompanyPositions::where('postion_name', 'like', $postion_name)
+        if(isset($request->remotly)){
+            $pos = CompanyPositions::where('postion_name', 'like', $postion_name)
             ->whereBetween('salary', [$salary_low, $salary_high])
             ->where('location', 'like',  $location)
             ->where('experience', '>=',  $experience)
             ->where('job_level', 'like',  $job_level)
-            ->where('remote', $remote)
+            ->where('remote', $request->remotly)
             ->with('company', 'applications.user')
             ->get();
+        }else{
+            $pos = CompanyPositions::where('postion_name', 'like', $postion_name)
+            ->whereBetween('salary', [$salary_low, $salary_high])
+            ->where('location', 'like',  $location)
+            ->where('experience', '>=',  $experience)
+            ->where('job_level', 'like',  $job_level)
+            ->with('company', 'applications.user')
+            ->get();   
+        } 
         $user = Auth::user();
+        info($pos);
         $pos = $pos->filter(function ($p) use ($user) {
             $apps = $p->applications;
             foreach ($apps as $app) {

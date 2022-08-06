@@ -3,7 +3,7 @@
     <v-container>
       <nar-bar :selected="'-'"></nar-bar>
     </v-container>
-    <div :class="[loading ? 'default-container' : 'main-container']">
+    <div >
       <div v-if="loading" class="text-center" style="line-height: 33">
         <v-progress-circular
           indeterminate

@@ -157,15 +157,7 @@ class CompanyController extends Controller
             $positions = CompanyPositions::where('company_id', $company->id)
                 ->orderBy('created_at', 'DESC')
                 ->with('company', 'applications.user')->get();
-            $positions = $positions->filter(function ($p) use ($user) {
-                $apps = $p->applications;
-                foreach ($apps as $app) {
-                    if ($app->user->id == $user->id) {
-                        $app->isMine = true;
-                    }
-                }
-                return true;
-            });
+           $positions->applications = [];
             return response()->json(['pos' => $positions, 'msg' => '', 'code' => 200], 200);
         } else {
             return response()->json(['pos' => [], 'msg' => '', 'code' => 300], 200);
