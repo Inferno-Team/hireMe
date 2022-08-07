@@ -15,9 +15,10 @@ class OperationController extends Controller
     {
         // [ name , location ]
         $location = isset($request->location) ? $request->location : '%';
-        $title = isset($request->name) ? "%$request->name%" : '%';
+        $title = isset($request->title) ? "%$request->title%" : '%';
         $pos = CompanyPositions::where('postion_name', 'like', $title)
-            ->where('location', $location)->get();
+            ->where('location', 'like', $location)->with("company")->get();
+        info($pos);
         return response()->json($pos, 200);
     }
     public function filter(Request $request)
@@ -34,24 +35,24 @@ class OperationController extends Controller
         $job_level = isset($request->job_level) ? $request->job_level : '%';
         $pos = [];
 
-        if(isset($request->remotly)){
+        if (isset($request->remotly)) {
             $pos = CompanyPositions::where('postion_name', 'like', $postion_name)
-            ->whereBetween('salary', [$salary_low, $salary_high])
-            ->where('location', 'like',  $location)
-            ->where('experience', '>=',  $experience)
-            ->where('job_level', 'like',  $job_level)
-            ->where('remote', $request->remotly)
-            ->with('company', 'applications.user')
-            ->get();
-        }else{
+                ->whereBetween('salary', [$salary_low, $salary_high])
+                ->where('location', 'like',  $location)
+                ->where('experience', '>=',  $experience)
+                ->where('job_level', 'like',  $job_level)
+                ->where('remote', $request->remotly)
+                ->with('company', 'applications.user')
+                ->get();
+        } else {
             $pos = CompanyPositions::where('postion_name', 'like', $postion_name)
-            ->whereBetween('salary', [$salary_low, $salary_high])
-            ->where('location', 'like',  $location)
-            ->where('experience', '>=',  $experience)
-            ->where('job_level', 'like',  $job_level)
-            ->with('company', 'applications.user')
-            ->get();   
-        } 
+                ->whereBetween('salary', [$salary_low, $salary_high])
+                ->where('location', 'like',  $location)
+                ->where('experience', '>=',  $experience)
+                ->where('job_level', 'like',  $job_level)
+                ->with('company', 'applications.user')
+                ->get();
+        }
         $user = Auth::user();
         info($pos);
         $pos = $pos->filter(function ($p) use ($user) {
@@ -69,7 +70,7 @@ class OperationController extends Controller
     {
         $pos = CompanyPositions::with('company', 'applications.user')->get();
         $user = Auth::user();
-        $pos = $pos->filter(function ($p)  use($user){
+        $pos = $pos->filter(function ($p)  use ($user) {
             $apps = $p->applications;
             foreach ($apps as $app) {
                 if ($app->user->id == $user->id) {

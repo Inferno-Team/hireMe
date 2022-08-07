@@ -49,11 +49,7 @@ export default {
   },
   methods: {
     search() {
-      const token = localStorage.getItem("hire-me-token");
-      if (token === undefined || token === null) {
-        alert("you need to log in first.");
-        return;
-      }
+      
       this.loading = true;
       axios
         .post("/api/search", {
