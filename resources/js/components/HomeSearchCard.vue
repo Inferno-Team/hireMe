@@ -49,7 +49,12 @@ export default {
   },
   methods: {
     search() {
-      
+      let token = localStorage.getItem("hire-me-token");
+      let isLoggedIn = token !== null && token !== undefined;
+      if(!isLoggedIn){
+        alert("You must be logged in to search");
+        return;
+      }
       this.loading = true;
       axios
         .post("/api/search", {

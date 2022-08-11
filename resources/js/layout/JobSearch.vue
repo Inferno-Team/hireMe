@@ -9,7 +9,7 @@
           <Job
             v-for="(job, index) in jobsToDisplay"
             :key="index"
-            :job="job" 
+            :job="job"
           ></Job>
         </div>
         <v-pagination

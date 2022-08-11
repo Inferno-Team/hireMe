@@ -35,18 +35,24 @@ export default {
     };
   },
   mounted() {
-    axios
-      .get("/api/get_all_companies")
-      .then((response) => {
-        this.companies = response.data;
-        this.pageChanged(1);
-        let pages = this.companies.length / this.itemPerPage;
-        if (pages % 1 > 0) pages = Math.round(pages);
-        this.pageCount = pages;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    let token = localStorage.getItem("hire-me-token");
+    let isLoggedIn = token !== null && token !== undefined;
+    if (!isLoggedIn) {
+      alert("You must login to see this page");
+      this.$router.push({ name: "login" });
+    } else
+      axios
+        .get("/api/get_all_companies")
+        .then((response) => {
+          this.companies = response.data;
+          this.pageChanged(1);
+          let pages = this.companies.length / this.itemPerPage;
+          if (pages % 1 > 0) pages = Math.round(pages);
+          this.pageCount = pages;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
   },
   methods: {
     pageChanged(page) {

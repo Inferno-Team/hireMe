@@ -60,7 +60,7 @@
             :job="job"
           ></Job>
         </div>
-          <v-pagination
+        <v-pagination
           class="card-footer pb-4 pt-3"
           :length="pageCount"
           @input="pageChanged"
@@ -76,8 +76,15 @@ import Job from "../components/Job.vue";
 export default {
   components: { NarBar, Job },
   mounted() {
-    this.loadMyAccount();
-    this.loadMyJobs();
+    let token = localStorage.getItem("hire-me-token");
+    let isLoggedIn = token !== null && token !== undefined;
+    if (!isLoggedIn) {
+      alert("You must login to see this page");
+      this.$router.push({ name: "login" });
+    } else {
+      this.loadMyAccount();
+      this.loadMyJobs();
+    }
   },
   methods: {
     loadMyAccount() {
@@ -95,7 +102,7 @@ export default {
         .post("/api/load-my-jobs")
         .then((result) => {
           this.jobs = result.data;
-           this.pageChanged(1);
+          this.pageChanged(1);
           this.pageCount = Math.ceil(this.jobs.length / this.itemPerPage);
         })
         .catch((err) => {
@@ -115,7 +122,7 @@ export default {
           console.log(err);
         });
     },
-      pageChanged(page) {
+    pageChanged(page) {
       this.jobsToDisplay = [];
       let firstIndex = (page - 1) * this.itemPerPage;
       let lastIndex = firstIndex + this.itemPerPage;
@@ -128,9 +135,9 @@ export default {
       account: null,
       saveing: false,
       jobs: [],
-      jobsToDisplay:[],
-      pageCount:0,
-      itemPerPage:5
+      jobsToDisplay: [],
+      pageCount: 0,
+      itemPerPage: 5,
     };
   },
 };

@@ -28,9 +28,14 @@ import axios from "axios";
 // import Job from "../components/Job.vue";
 export default {
   components: { NarBar, Job },
-  props:['id'],
+  props: ["id"],
   mounted() {
-    this.loadJobs();
+    let token = localStorage.getItem("hire-me-token");
+    let isLoggedIn = token !== null && token !== undefined;
+    if (!isLoggedIn) {
+      alert("You must login to see this page");
+      this.$router.push({ name: "login" });
+    } else this.loadJobs();
   },
   data() {
     return {
@@ -42,7 +47,7 @@ export default {
   },
   methods: {
     loadJobs() {
-        let id = this.$props.id;
+      let id = this.$props.id;
       axios
         .get(`/api/get_company_positions/${id}`)
         .then((response) => {

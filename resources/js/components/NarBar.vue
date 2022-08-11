@@ -139,9 +139,9 @@ export default {
     moveToMyCompany() {
       this.$router.push({ name: "my-comapny" });
     },
-    moveToMyAccount(){
-       this.$router.push({ name: "my-account" });
-    }
+    moveToMyAccount() {
+      this.$router.push({ name: "my-account" });
+    },
   },
 };
 </script>

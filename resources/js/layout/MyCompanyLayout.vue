@@ -4,7 +4,6 @@
       <nar-bar :selected="'-'"></nar-bar>
     </v-container>
 
- 
     <div :class="[loading ? 'default-container' : 'main-container']">
       <div v-if="loading" class="text-center" style="line-height: 33">
         <v-progress-circular
@@ -238,7 +237,12 @@ import HomeButton from "../components/HomeButton.vue";
 export default {
   components: { NarBar, Job, HomeButton },
   mounted() {
-    this.loadJobs();
+    let token = localStorage.getItem("hire-me-token");
+    let isLoggedIn = token !== null && token !== undefined;
+    if (!isLoggedIn) {
+      alert("You must login to see this page");
+      this.$router.push({ name: "login" });
+    } else this.loadJobs();
   },
   data() {
     return {
@@ -376,11 +380,11 @@ export default {
   padding-top: 0.25rem;
   width: 22rem;
 }
- #create .v-speed-dial {
-    position: absolute;
-  }
+#create .v-speed-dial {
+  position: absolute;
+}
 
-  #create .v-btn--floating {
-    position: relative;
-  }
+#create .v-btn--floating {
+  position: relative;
+}
 </style>

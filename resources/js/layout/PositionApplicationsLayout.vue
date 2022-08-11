@@ -3,7 +3,7 @@
     <v-container>
       <nar-bar :selected="'-'"></nar-bar>
     </v-container>
-    <div >
+    <div>
       <div v-if="loading" class="text-center" style="line-height: 33">
         <v-progress-circular
           indeterminate
@@ -36,7 +36,12 @@ import Application from "../components/Application.vue";
 export default {
   props: ["id"],
   mounted() {
-    this.loadJobApplications();
+    let token = localStorage.getItem("hire-me-token");
+    let isLoggedIn = token !== null && token !== undefined;
+    if (!isLoggedIn) {
+      alert("You must login to see this page");
+      this.$router.push({ name: "login" });
+    } else this.loadJobApplications();
   },
   components: { NarBar, Application },
   data() {

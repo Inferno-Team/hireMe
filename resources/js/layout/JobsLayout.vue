@@ -105,7 +105,12 @@ import Job from "../components/Job.vue";
 export default {
   components: { NarBar, Job },
   mounted() {
-    this.loadJobs();
+    let token = localStorage.getItem("hire-me-token");
+    let isLoggedIn = token !== null && token !== undefined;
+    if (!isLoggedIn) {
+      alert("You must login to see this page");
+      this.$router.push({ name: "login" });
+    } else this.loadJobs();
   },
   data() {
     return {
@@ -153,7 +158,7 @@ export default {
       this.change(val);
     },
     applyFilter() {
-       this.applying = true;
+      this.applying = true;
       axios
         .post("/api/filter", this.sendData)
         .then((response) => {
@@ -166,7 +171,6 @@ export default {
           console.log(err);
           this.applying = false;
         });
-     
     },
     loadJobs() {
       axios
