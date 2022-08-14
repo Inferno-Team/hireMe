@@ -58,6 +58,7 @@
             v-for="(job, index) in jobsToDisplay"
             :key="index"
             :job="job"
+            :is_mine="true"
           ></Job>
         </div>
         <v-pagination

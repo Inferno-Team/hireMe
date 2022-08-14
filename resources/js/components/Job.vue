@@ -300,7 +300,7 @@
 </template>
 <script>
 export default {
-  props: ["job", "editable"],
+  props: ["job", "editable","is_mine"],
   data() {
     return {
       isMineObject: false,
@@ -404,7 +404,7 @@ export default {
   },
   computed: {
     mine() {
-      this.isMineObject = false;
+      this.isMineObject = this.$props.is_mine;
       this.hover = this.editable;
       this.innerJob = this.job;
       var apps = this.job.applications;
