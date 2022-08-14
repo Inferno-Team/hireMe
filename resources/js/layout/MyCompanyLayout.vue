@@ -312,6 +312,7 @@ export default {
           let data = response.data;
           this.addNewCompanyLoading = false;
           this.code = 200;
+          this.company = {};
           console.log(data);
         })
         .catch((err) => {
@@ -332,6 +333,15 @@ export default {
           if (response.data.code == 200) {
             this.jobs.unshift(response.data.position);
             this.pageChanged(1);
+            this.position = {
+              remote: false,
+              experience: "",
+              job_level: "",
+              job_role: "",
+              location: "",
+              postion_name: "",
+              salary: "",
+            };
           }
         })
         .catch((err) => {
