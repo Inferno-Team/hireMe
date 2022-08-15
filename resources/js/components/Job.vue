@@ -236,7 +236,12 @@
                     label="Experience"
                     required
                     v-model="innerJob.experience"
-                    :rules="[(value) => !!value || 'Required.']"
+                    :rules="[
+                      (value) => !!value || 'Required.',
+                      (value) =>
+                        /^\d+$/.test(value) ||
+                        'Please enter a positive number.',
+                    ]"
                     :type="'number'"
                     outlined
                     color="purple darken-3"
@@ -271,7 +276,12 @@
                     label="Salary"
                     required
                     v-model="innerJob.salary"
-                    :rules="[(value) => !!value || 'Required.']"
+                    :rules="[
+                      (value) => !!value || 'Required.',
+                      (value) =>
+                        /^\d+$/.test(value) ||
+                        'Please enter a positive number.',
+                    ]"
                     :type="'number'"
                     outlined
                     color="purple darken-3"
@@ -300,7 +310,7 @@
 </template>
 <script>
 export default {
-  props: ["job", "editable","is_mine"],
+  props: ["job", "editable", "is_mine"],
   data() {
     return {
       isMineObject: false,

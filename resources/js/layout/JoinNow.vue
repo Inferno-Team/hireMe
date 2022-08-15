@@ -19,7 +19,8 @@
                   outlined
                   v-model="fields.name"
                   type="text"
-                  :rules="[(value) => !!value || 'Required.']"
+                  :rules="[(value) => !!value || 'Required.',
+                  (value)=>/^[A-Za-z]+$/.test(value) || 'Please enter a valid name.']"
                   color="purple darken-3"
                 ></v-text-field>
                 <v-text-field
@@ -97,6 +98,7 @@ export default {
       isLoading: false,
     };
   },
+
   methods: {
     signup() {
       this.isLoading = true;
@@ -124,6 +126,26 @@ export default {
     },
     goBack() {
       this.$router.push({ name: "login" });
+    },
+    checkIsAllNumber(value) {
+      var array = value.split("");
+      for (let index = 0; index < array.length; index++) {
+        const element = array[index].charCodeAt();
+        if (
+          (element >= 97 && element <= 122) ||
+          (element >= 65 && element <= 90)
+        )
+          return false;
+      }
+      return true;
+    },
+    checkString() {
+      var state = this.checkIsAllNumber(this.fields.name);
+      console.log(state);
+      if (state) {
+        alert("user name cant be all number.");
+        this.fields.name = "";
+      }
     },
   },
 };

@@ -181,7 +181,11 @@
                 label="Experience"
                 required
                 v-model="position.experience"
-                :rules="[(value) => !!value || 'Required.']"
+                :rules="[
+                  (value) => !!value || 'Required.',
+                  (value) =>
+                    /^\d+$/.test(value) || 'Please enter a positive number.',
+                ]"
                 :type="'number'"
                 outlined
                 color="purple darken-3"
@@ -216,7 +220,11 @@
                 label="Salary"
                 required
                 v-model="position.salary"
-                :rules="[(value) => !!value || 'Required.']"
+                :rules="[
+                  (value) => !!value || 'Required.',
+                  (value) =>
+                    /^\d+$/.test(value) || 'Please enter a positive number.',
+                ]"
                 :type="'number'"
                 outlined
                 color="purple darken-3"

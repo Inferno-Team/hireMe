@@ -45,7 +45,8 @@
           hint="1 Year"
           v-model="sendData.experience"
           type="number"
-          @change="change"
+          :rules=" [(value) =>
+                    /^\d+$/.test(value) || 'Please enter a positive number.']"
           color="purple darken-3"
         ></v-text-field>
         <v-select
