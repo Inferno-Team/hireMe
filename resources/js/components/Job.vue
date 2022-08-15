@@ -13,6 +13,7 @@
         :class="[
           'ma-2',
           'pa-2',
+          'width500',
           'deep-purple',
           isMineObject ? 'no-pointer' : 'pointer',
           isMineObject ? 'lighten-3' : 'lighten-5',
@@ -455,5 +456,8 @@ export default {
 }
 .displayNone {
   display: none !important;
+}
+.width500{
+  width:20rem
 }
 </style>
