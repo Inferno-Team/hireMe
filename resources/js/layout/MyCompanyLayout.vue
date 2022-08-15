@@ -151,8 +151,8 @@
           </v-toolbar-items>
         </v-toolbar>
 
-        <v-form v-model="isFormValid">
-          <div class="input-fields my-auto">
+        <v-form v-model="isFormValid" class=" my-auto">
+          <div class="input-fields">
             <v-row>
               <v-col>
                 <v-text-field
