@@ -206,89 +206,90 @@
               </v-toolbar-items>
             </v-toolbar>
 
-            <div class="input-fields my-auto">
-              <v-row>
-                <v-col>
-                  <v-text-field
-                    class="input-field"
-                    label="Position Name"
-                    required
-                    v-model="innerJob.postion_name"
-                    :rules="[(value) => !!value || 'Required.']"
-                    :type="'text'"
-                    outlined
-                    color="purple darken-3"
-                  ></v-text-field>
+            <v-form v-model="isFormValid">
+              <div class="input-fields my-auto">
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                      class="input-field"
+                      label="Position Name"
+                      required
+                      v-model="innerJob.postion_name"
+                      :rules="[(value) => !!value || 'Required.']"
+                      :type="'text'"
+                      outlined
+                      color="purple darken-3"
+                    ></v-text-field>
 
-                  <v-text-field
-                    class="input-field"
-                    label="Location"
-                    required
-                    v-model="innerJob.location"
-                    :rules="[(value) => !!value || 'Required.']"
-                    :type="'text'"
-                    outlined
-                    color="purple darken-3"
-                  ></v-text-field>
+                    <v-text-field
+                      class="input-field"
+                      label="Location"
+                      required
+                      v-model="innerJob.location"
+                      :rules="[(value) => !!value || 'Required.']"
+                      :type="'text'"
+                      outlined
+                      color="purple darken-3"
+                    ></v-text-field>
 
-                  <v-text-field
-                    class="input-field"
-                    label="Experience"
-                    required
-                    v-model="innerJob.experience"
-                    :rules="[
-                      (value) => !!value || 'Required.',
-                      (value) =>
-                        /^\d+$/.test(value) ||
-                        'Please enter a positive number.',
-                    ]"
-                    :type="'number'"
-                    outlined
-                    color="purple darken-3"
-                  ></v-text-field>
+                    <v-text-field
+                      class="input-field"
+                      label="Experience"
+                      required
+                      v-model="innerJob.experience"
+                      :rules="[
+                        (value) => !!value || 'Required.',
+                        (value) =>
+                          /^\d+$/.test(value) ||
+                          'Please enter a positive number.',
+                      ]"
+                      :type="'number'"
+                      outlined
+                      color="purple darken-3"
+                    ></v-text-field>
 
-                  <v-checkbox
-                    v-model="innerJob.remote"
-                    :label="'Remotly ?'"
-                    color="purple"
-                  ></v-checkbox>
-                </v-col>
-                <v-col>
-                  <v-text-field
-                    class="input-field"
-                    label="Job Role"
-                    required
-                    v-model="innerJob.job_role"
-                    :rules="[(value) => !!value || 'Required.']"
-                    :type="'text'"
-                    outlined
-                    color="purple darken-3"
-                  ></v-text-field>
-                  <v-select
-                    :items="levels"
-                    label="Job Level"
-                    outlined
-                    v-model="innerJob.job_level"
-                  ></v-select>
+                    <v-checkbox
+                      v-model="innerJob.remote"
+                      :label="'Remotly ?'"
+                      color="purple"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col>
+                    <v-text-field
+                      class="input-field"
+                      label="Job Role"
+                      required
+                      v-model="innerJob.job_role"
+                      :rules="[(value) => !!value || 'Required.']"
+                      :type="'text'"
+                      outlined
+                      color="purple darken-3"
+                    ></v-text-field>
+                    <v-select
+                      :items="levels"
+                      label="Job Level"
+                      outlined
+                      v-model="innerJob.job_level"
+                    ></v-select>
 
-                  <v-text-field
-                    class="input-field"
-                    label="Salary"
-                    required
-                    v-model="innerJob.salary"
-                    :rules="[
-                      (value) => !!value || 'Required.',
-                      (value) =>
-                        /^\d+$/.test(value) ||
-                        'Please enter a positive number.',
-                    ]"
-                    :type="'number'"
-                    outlined
-                    color="purple darken-3"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </div>
+                    <v-text-field
+                      class="input-field"
+                      label="Salary"
+                      required
+                      v-model="innerJob.salary"
+                      :rules="[
+                        (value) => !!value || 'Required.',
+                        (value) =>
+                          /^\d+$/.test(value) ||
+                          'Please enter a positive number.',
+                      ]"
+                      :type="'number'"
+                      outlined
+                      color="purple darken-3"
+                    ></v-text-field>
+                  </v-col>
+                </v-row></div
+            ></v-form>
           </v-card>
         </v-dialog>
         <v-snackbar v-model="snackbar" :timeout="1500">
@@ -316,6 +317,7 @@ export default {
       isMineObject: false,
       fab: false,
       filename: null,
+      isFormValid: false,
       hover: false,
       applyDialogState: false,
       cvFile: File,
@@ -378,6 +380,10 @@ export default {
       this.cvFile = await file;
     },
     editPosition() {
+      if (!this.isFormValid) {
+        alert("Some Error Occured");
+        return;
+      }
       this.editDialogState = false;
       axios
         .post("/api/edit_position", this.innerJob)

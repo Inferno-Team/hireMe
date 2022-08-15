@@ -4,85 +4,90 @@
       <nar-bar :selected="'2'"></nar-bar>
     </v-container>
     <div class="main-container">
-      <div class="side-bar">
-        <div
-          style="max-width: fit-content"
-          class="
-            purple--text
-            text--darken-2
-            font-weight-bold
-            text-lg-h6
-            mx-auto
-          "
-        >
-          Filter
-        </div>
-        <v-btn text @click="clear" v-if="!isClear">clear</v-btn>
-        <v-text-field
-          class="input-field mt-4"
-          label="Position Name"
-          outlined
-          @change="change"
-          hint="Android Developer"
-          v-model="sendData.postion_name"
-          type="text"
-          color="purple darken-3"
-        ></v-text-field>
-        <v-text-field
-          class="input-field"
-          label="Location"
-          outlined
-          hint="Aleppo"
-          v-model="sendData.location"
-          type="text"
-          @change="change"
-          color="purple darken-3"
-        ></v-text-field>
-        <v-text-field
-          class="input-field"
-          label="Years of Experience"
-          outlined
-          hint="1 Year"
-          v-model="sendData.experience"
-          type="number"
-          :rules=" [(value) =>
-                    /^\d+$/.test(value) || 'Please enter a positive number.']"
-          color="purple darken-3"
-        ></v-text-field>
-        <v-select
-          :items="levels"
-          label="Job Level"
-          @change="change"
-          outlined
-          v-model="sendData.job_level"
-        ></v-select>
-        <v-range-slider
-          v-model="value"
-          step="10"
-          ticks="always"
-          tick-size="4"
-          label="Salary"
-          :hint="saleryHint"
-          persistent-hint
-          @change="salaryRangeChange"
-        >
-        </v-range-slider>
-        <v-checkbox
-          v-model="sendData.remotly"
-          :label="'Remotly ?'"
-          color="purple"
-          @change="change"
-        ></v-checkbox>
-        <v-btn
-          block
-          :loading="applying"
-          color="purple lighten-2"
-          elevation="4"
-          dark
-          @click="applyFilter"
-          >Apply</v-btn
-        >
-      </div>
+      <v-form v-model="isFormValid">
+        <div class="side-bar">
+          <div
+            style="max-width: fit-content"
+            class="
+              purple--text
+              text--darken-2
+              font-weight-bold
+              text-lg-h6
+              mx-auto
+            "
+          >
+            Filter
+          </div>
+          <v-btn text @click="clear" v-if="!isClear">clear</v-btn>
+          <v-text-field
+            class="input-field mt-4"
+            label="Position Name"
+            outlined
+            @change="change"
+            hint="Android Developer"
+            v-model="sendData.postion_name"
+            type="text"
+            color="purple darken-3"
+          ></v-text-field>
+          <v-text-field
+            class="input-field"
+            label="Location"
+            outlined
+            hint="Aleppo"
+            v-model="sendData.location"
+            type="text"
+            @change="change"
+            color="purple darken-3"
+          ></v-text-field>
+          <v-text-field
+            class="input-field"
+            label="Years of Experience"
+            outlined
+            hint="1 Year"
+            @change="change"
+            v-model="sendData.experience"
+            type="number"
+            :rules="[
+              (value) =>
+                /^\d*$/.test(value) || 'Please enter a positive number.',
+            ]"
+            color="purple darken-3"
+          ></v-text-field>
+          <v-select
+            :items="levels"
+            label="Job Level"
+            @change="change"
+            outlined
+            v-model="sendData.job_level"
+          ></v-select>
+          <v-range-slider
+            v-model="value"
+            step="10"
+            ticks="always"
+            tick-size="4"
+            label="Salary"
+            :hint="saleryHint"
+            persistent-hint
+            @change="salaryRangeChange"
+          >
+          </v-range-slider>
+          <v-checkbox
+            v-model="sendData.remotly"
+            :label="'Remotly ?'"
+            color="purple"
+            @change="change"
+          ></v-checkbox>
+          <v-btn
+            block
+            :loading="applying"
+            color="purple lighten-2"
+            elevation="4"
+            dark
+            @click="applyFilter"
+            >Apply</v-btn
+          >
+        </div></v-form
+      >
       <div class="jobs-and-page">
         <div class="jobs">
           <Job
@@ -142,6 +147,7 @@ export default {
       jobs: [],
       isClear: true,
       itemPerPage: 6,
+      isFormValid: false,
       jobsToDisplay: [],
       pageCount: 1,
     };
@@ -159,6 +165,10 @@ export default {
       this.change(val);
     },
     applyFilter() {
+       if(!this.isFormValid){
+        alert("Some Error Occured");
+        return;
+      }
       this.applying = true;
       axios
         .post("/api/filter", this.sendData)
@@ -196,7 +206,15 @@ export default {
       else this.isClear = true;
     },
     clear() {
-      this.sendData = {};
+      this.sendData = {
+        position_name: "",
+        location: "",
+        experience: "",
+        job_level: "",
+        salary_low: "",
+        salary_high: "",
+        remotly: false,
+      };
       this.isClear = true;
       this.value = [0, 0];
       this.saleryHint = ``;

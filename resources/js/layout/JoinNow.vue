@@ -11,7 +11,7 @@
         <div class="sectionBx">
           <div class="login-text">
             <h2>Sign Up</h2>
-            <form @submit.prevent>
+            <v-form @submit.prevent v-model="isFormValid">
               <div class="input-fields">
                 <v-text-field
                   class="input-field"
@@ -19,8 +19,11 @@
                   outlined
                   v-model="fields.name"
                   type="text"
-                  :rules="[(value) => !!value || 'Required.',
-                  (value)=>/^[A-Za-z]+$/.test(value) || 'Please enter a valid name.']"
+                  :rules="[
+                    (value) => !!value || 'Required.',
+                    (value) =>
+                      /^[A-Za-z]+$/.test(value) || 'Please enter a valid name.',
+                  ]"
                   color="purple darken-3"
                 ></v-text-field>
                 <v-text-field
@@ -71,7 +74,7 @@
                   </div>
                 </div>
               </div>
-            </form>
+            </v-form>
           </div>
         </div>
       </section>
@@ -93,6 +96,7 @@ export default {
       fields: {
         manager: false,
       },
+      isFormValid: false,
       passState: Boolean,
       errors: [],
       isLoading: false,
@@ -101,6 +105,10 @@ export default {
 
   methods: {
     signup() {
+      if(!this.isFormValid){
+        alert("Some Error Occured");
+        return;
+      }
       this.isLoading = true;
       if (this.fields.manager) this.fields.type = "manager";
       else this.fields.type = "user";

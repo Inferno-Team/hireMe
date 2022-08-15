@@ -151,87 +151,89 @@
           </v-toolbar-items>
         </v-toolbar>
 
-        <div class="input-fields my-auto">
-          <v-row>
-            <v-col>
-              <v-text-field
-                class="input-field"
-                label="Position Name"
-                required
-                v-model="position.postion_name"
-                :rules="[(value) => !!value || 'Required.']"
-                :type="'text'"
-                outlined
-                color="purple darken-3"
-              ></v-text-field>
+        <v-form v-model="isFormValid">
+          <div class="input-fields my-auto">
+            <v-row>
+              <v-col>
+                <v-text-field
+                  class="input-field"
+                  label="Position Name"
+                  required
+                  v-model="position.postion_name"
+                  :rules="[(value) => !!value || 'Required.']"
+                  :type="'text'"
+                  outlined
+                  color="purple darken-3"
+                ></v-text-field>
 
-              <v-text-field
-                class="input-field"
-                label="Location"
-                required
-                v-model="position.location"
-                :rules="[(value) => !!value || 'Required.']"
-                :type="'text'"
-                outlined
-                color="purple darken-3"
-              ></v-text-field>
+                <v-text-field
+                  class="input-field"
+                  label="Location"
+                  required
+                  v-model="position.location"
+                  :rules="[(value) => !!value || 'Required.']"
+                  :type="'text'"
+                  outlined
+                  color="purple darken-3"
+                ></v-text-field>
 
-              <v-text-field
-                class="input-field"
-                label="Experience"
-                required
-                v-model="position.experience"
-                :rules="[
-                  (value) => !!value || 'Required.',
-                  (value) =>
-                    /^\d+$/.test(value) || 'Please enter a positive number.',
-                ]"
-                :type="'number'"
-                outlined
-                color="purple darken-3"
-              ></v-text-field>
+                <v-text-field
+                  class="input-field"
+                  label="Experience"
+                  required
+                  v-model="position.experience"
+                  :rules="[
+                    (value) => !!value || 'Required.',
+                    (value) =>
+                      /^\d+$/.test(value) || 'Please enter a positive number.',
+                  ]"
+                  :type="'number'"
+                  outlined
+                  color="purple darken-3"
+                ></v-text-field>
 
-              <v-checkbox
-                v-model="position.remote"
-                :label="'Remotly ?'"
-                color="purple"
-              ></v-checkbox>
-            </v-col>
-            <v-col>
-              <v-text-field
-                class="input-field"
-                label="Job Role"
-                required
-                v-model="position.job_role"
-                :rules="[(value) => !!value || 'Required.']"
-                :type="'text'"
-                outlined
-                color="purple darken-3"
-              ></v-text-field>
-              <v-select
-                :items="levels"
-                label="Job Level"
-                outlined
-                v-model="position.job_level"
-              ></v-select>
+                <v-checkbox
+                  v-model="position.remote"
+                  :label="'Remotly ?'"
+                  color="purple"
+                ></v-checkbox>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  class="input-field"
+                  label="Job Role"
+                  required
+                  v-model="position.job_role"
+                  :rules="[(value) => !!value || 'Required.']"
+                  :type="'text'"
+                  outlined
+                  color="purple darken-3"
+                ></v-text-field>
+                <v-select
+                  :items="levels"
+                  label="Job Level"
+                  outlined
+                  v-model="position.job_level"
+                ></v-select>
 
-              <v-text-field
-                class="input-field"
-                label="Salary"
-                required
-                v-model="position.salary"
-                :rules="[
-                  (value) => !!value || 'Required.',
-                  (value) =>
-                    /^\d+$/.test(value) || 'Please enter a positive number.',
-                ]"
-                :type="'number'"
-                outlined
-                color="purple darken-3"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-        </div>
+                <v-text-field
+                  class="input-field"
+                  label="Salary"
+                  required
+                  v-model="position.salary"
+                  :rules="[
+                    (value) => !!value || 'Required.',
+                    (value) =>
+                      /^\d+$/.test(value) || 'Please enter a positive number.',
+                  ]"
+                  :type="'number'"
+                  outlined
+                  color="purple darken-3"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </div>
+        </v-form>
       </v-card>
     </v-dialog>
   </div>
@@ -256,6 +258,7 @@ export default {
     return {
       fab: false,
       jobs: [],
+      isFormValid:false,
       itemPerPage: 5,
       jobsToDisplay: [],
       pageCount: 1,
@@ -331,6 +334,10 @@ export default {
       this.company.logo = await file;
     },
     addPosition() {
+      if(!this.isFormValid){
+        alert("Some Error Occured");
+        return;
+      }
       this.addNewPosition = true;
       this.addPositionDialog = false;
       axios
