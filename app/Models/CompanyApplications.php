@@ -17,7 +17,7 @@ class CompanyApplications extends Model
     }
     public function format(){
         return [
-            "cv_file"=>$this->cv_file,
+            "cv_file"=> url('/public/cv') .'/'.$this->cv_file,
             "user"=>$this->user,
             "created_at"=>$this->created_at->diffForHumans()
         ];

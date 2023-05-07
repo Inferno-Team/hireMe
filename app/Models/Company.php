@@ -14,10 +14,10 @@ class Company extends Model
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'logo' => url('/') . $this->logo_url,
+            'logo' => url('/public/logos') . '/' . $this->logo_url,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'pos_size' =>count($this->positions)
+            'pos_size' => count($this->positions)
         ];
     }
     protected $fillable = [

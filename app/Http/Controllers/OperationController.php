@@ -97,9 +97,9 @@ class OperationController extends Controller
             $name = $time . '.' . $ex;
 
             $compName = $pos->company->name;
-
-            $cv->storeAs("public/cv/$compName", $name);
-            $application->cv_file = "/storage/cv/$compName/" . $name;
+            $cv->move(public_path("cv/$compName"), $name);
+            // $cv->storeAs("public/cv/$compName", $name);
+            $application->cv_file = "$compName/" . $name;
             $application->save();
         }
         info($application);
