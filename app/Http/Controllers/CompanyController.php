@@ -30,8 +30,8 @@ class CompanyController extends Controller
             $logo = $request->file('logo');
             $extension = $logo->getClientOriginalExtension();
             $name = time() . '.' . $extension;
-            $logo->storeAs('public/logo', $name);
-            $company->logo_url = "/storage/logo/$name";
+            $logo->move(public_path('/logos'),$name);
+            $company->logo_url = $name;
             $company->save();
         } else info('no logo');
         return response()->json([
